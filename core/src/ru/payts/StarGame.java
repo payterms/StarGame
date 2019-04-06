@@ -9,15 +9,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class StarGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	Texture background;
 	TextureRegion region;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-		region = new TextureRegion(img, 100, 100, 150, 150);
-		region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        background = new Texture("space_v.jpg");
+		//region = new TextureRegion(img, 0, 0, 150, 150);
+        //img.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 	}
 
 	@Override
@@ -25,16 +25,19 @@ public class StarGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.setColor(0.1f, 0.1f, 0.1f, 1f);
-		batch.draw(img, 100, 100);
-		batch.setColor(0.666f, 0.777f, 0.1313f, 1f);
-		batch.draw(region, 0, 0);
+		//batch.setColor(0.1f, 0.1f, 0.1f, 1f);
+
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+
+		//batch.setColor(0.666f, 0.777f, 0.1313f, 1f);
+		//batch.draw(region, 0, 0);
 		batch.end();
 	}
 
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+        background.dispose();
 	}
 }
