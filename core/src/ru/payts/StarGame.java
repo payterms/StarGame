@@ -1,43 +1,14 @@
 package ru.payts;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Game;
 
-public class StarGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture background;
-	TextureRegion region;
+import ru.payts.screen.MenuScreen;
+
+public class StarGame extends Game {
 
 	@Override
-	public void create () {
-		batch = new SpriteBatch();
-        background = new Texture("space_v.jpg");
-		//region = new TextureRegion(img, 0, 0, 150, 150);
-        //img.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+	public void create() {
+		setScreen(new MenuScreen(this));
 	}
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		//batch.setColor(0.1f, 0.1f, 0.1f, 1f);
-
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-
-		//batch.setColor(0.666f, 0.777f, 0.1313f, 1f);
-		//batch.draw(region, 0, 0);
-		batch.end();
-	}
-
-	@Override
-	public void dispose () {
-		batch.dispose();
-        background.dispose();
-	}
 }
