@@ -9,18 +9,21 @@ import ru.payts.base.Ship;
 import ru.payts.base.Sprite;
 import ru.payts.math.Rect;
 import ru.payts.pool.BulletPool;
+import ru.payts.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
     private enum State {DESCENT, FIGHT}
+
     private State state;
     private Vector2 descentV;
 
     private MainShip mainShip;
 
-    public Enemy(BulletPool bulletPool, Sound shootSound, Rect worldBounds, MainShip mainShip) {
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound, Rect worldBounds, MainShip mainShip) {
         this.mainShip = mainShip;
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.worldBounds = worldBounds;
         this.shootSound = shootSound;
         this.descentV = new Vector2(0, -0.3f);
@@ -40,8 +43,9 @@ public class Enemy extends Ship {
                 shoot();
             }
         }
-        if (isOutside(worldBounds)) {
+        if (getBottom() < worldBounds.getBottom()) {
             destroy();
+            mainShip.damage(damage);
         }
     }
 
@@ -74,7 +78,7 @@ public class Enemy extends Ship {
         return !(bullet.getRight() < getLeft()
                 || bullet.getLeft() > getRight()
                 || bullet.getBottom() > getTop()
-                || bullet.getTop() < pos.y);
+                || bullet.getTop() < pos.y
+        );
     }
-
 }

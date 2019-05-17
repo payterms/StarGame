@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.payts.math.Rect;
 import ru.payts.pool.BulletPool;
+import ru.payts.pool.ExplosionPool;
 import ru.payts.sprite.Bullet;
+import ru.payts.sprite.Explosion;
 
 public class Ship extends Sprite {
 
@@ -15,6 +17,7 @@ public class Ship extends Sprite {
     protected Vector2 v;
     protected Vector2 v0;
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
     protected float bulletHeight;
     protected Vector2 bulletV;
@@ -23,6 +26,9 @@ public class Ship extends Sprite {
 
     protected float reloadInterval;
     protected float reloadTimer;
+
+    protected float damageAnimateInterval = 0.1f;
+    protected float damageAnimateTimer = damageAnimateInterval;
 
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
@@ -47,6 +53,10 @@ public class Ship extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= damageAnimateInterval) {
+            frame = 0;
+        }
     }
 
     public void shoot() {
@@ -54,10 +64,33 @@ public class Ship extends Sprite {
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
         shootSound.play();
     }
-    public void boom() {
-        hp = 0;
-        System.out.println("The ship was destroyed");
+
+    public void damage(int damage) {
+        frame = 1;
+        damageAnimateTimer = 0f;
+        hp -= damage;
+        if (hp <= 0) {
+            destroy();
+        }
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
+        hp = 0;
+    }
 
+    public int getHp() {
+        return hp;
+}
+
+    private void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(this.getHeight(), this.pos);
+    }
+
+    public Vector2 getV() {
+        return v;
+    }
 }

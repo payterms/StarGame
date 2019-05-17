@@ -11,9 +11,11 @@ import ru.payts.base.Ship;
 import ru.payts.base.Sprite;
 import ru.payts.math.Rect;
 import ru.payts.pool.BulletPool;
+import ru.payts.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
+    private static final int HP = 100;
     private static final int INVALID_POINTER = -1;
 
     private boolean pressedRight;
@@ -22,9 +24,10 @@ public class MainShip extends Ship {
     private int rightPointer = INVALID_POINTER;
     private int leftPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.shootSound = shootSound;
         setHeightProportion(0.15f);
@@ -32,7 +35,14 @@ public class MainShip extends Ship {
         this.bulletV.set(0f, 0.5f);
         this.bulletHeight = 0.015f;
         this.damage = 1;
+        this.hp = HP;
         this.v0.set(0.5f, 0);
+    }
+
+    public void reset() {
+        flushDestroy();
+        hp = HP;
+        pos.x = worldBounds.pos.x;
     }
 
     @Override
@@ -140,6 +150,14 @@ public class MainShip extends Ship {
         return false;
     }
 
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom()
+        );
+    }
+
     private void moveRight() {
         v.set(v0);
     }
@@ -150,11 +168,5 @@ public class MainShip extends Ship {
 
     private void stop() {
         v.setZero();
-    }
-    public boolean isBulletCollision(Rect bullet) {
-        return !(bullet.getRight() < getLeft()
-                || bullet.getLeft() > getRight()
-                || bullet.getBottom() > pos.y
-                || bullet.getTop() < getBottom());
     }
 }
